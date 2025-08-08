@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -31,6 +32,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Builder
 @EqualsAndHashCode(of = "id")
 @FieldDefaults(level = PRIVATE)
+@Table(name = "users")
 @Entity
 public class UserEntity {
     @Id
@@ -46,7 +48,7 @@ public class UserEntity {
     String phoneNumber;
 
     @Enumerated(STRING)
-    PhonePrefixs phonePrefixs;
+    PhonePrefixs phonePrefix;
 
     LocalDate birthDate;
 
