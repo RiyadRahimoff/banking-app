@@ -2,7 +2,7 @@ package com.azecoders.rrbank.model.enums;
 
 public enum UserStatus {
     ACTIVE,
-    INACTIVE,
+    PENDING,
     BLOCKED,
     DELETED
 }

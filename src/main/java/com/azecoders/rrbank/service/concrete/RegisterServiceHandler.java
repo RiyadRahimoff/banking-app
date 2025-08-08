@@ -4,12 +4,12 @@ import com.azecoders.rrbank.dao.entity.UserEntity;
 import com.azecoders.rrbank.dao.repository.UserRepository;
 import com.azecoders.rrbank.exception.UserFoundException;
 import com.azecoders.rrbank.mapper.UserMapper;
-import com.azecoders.rrbank.model.enums.ExceptionEnums;
 import com.azecoders.rrbank.model.requests.CreateRegisterRequest;
 import com.azecoders.rrbank.model.response.RegisterResponse;
 import com.azecoders.rrbank.service.abstraction.RegisterService;
 import com.azecoders.rrbank.util.VerificationCodeGenerator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.mail.MailSendException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +20,7 @@ import static com.azecoders.rrbank.model.enums.ExceptionEnums.USER_NOT_FOUND;
 public class RegisterServiceHandler implements RegisterService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MailServiceHandler mailService;
 
     @Override
     public RegisterResponse registerUser(CreateRegisterRequest registerRequest) {
@@ -30,6 +31,12 @@ public class RegisterServiceHandler implements RegisterService {
         String otpCode = VerificationCodeGenerator.generateCode();
         UserEntity user = UserMapper.toEntity(registerRequest, encodedPassword, otpCode);
         userRepository.save(user);
+
+        try {
+            mailService.sendVerificationCode(user.getEmail(), otpCode,user.getFullName());
+        } catch (MailSendException e) {
+            throw new RuntimeException("OTP message cannot be send please try again!");
+        }
 
       return UserMapper.toResponse(user);
     }
