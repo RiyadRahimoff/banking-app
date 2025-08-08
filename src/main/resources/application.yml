@@ -2,4 +2,20 @@ spring:
   datasource:
     password: Lenkeran5566
     username: root
-    url:
+    url: jdbc:mysql://localhost:3306/bank_release1
+
+  liquibase:
+    change-log: classpath:/liquibase/changelog-master.yml
+    drop-first: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: riyadrahimov28@gmail.com
+    password: 'epad qsqm erdr oupy'
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
