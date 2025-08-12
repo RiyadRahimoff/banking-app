@@ -37,6 +37,7 @@ public class SecurityConfig {
                                 "/api/login",
                                 "/api/refresh",
                                 "/api/logout",
+                                "/api/update",
                                 "/user/complete",
                                 "/api/enums/professions",
                                 "/api/v1/files/upload"
