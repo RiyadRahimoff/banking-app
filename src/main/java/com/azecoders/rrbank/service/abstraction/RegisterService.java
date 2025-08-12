@@ -6,5 +6,5 @@ import com.azecoders.rrbank.model.response.RegisterResponse;
 public interface RegisterService {
     RegisterResponse registerUser(CreateRegisterRequest registerRequest);
 
-    boolean verifyuser(String verificationCode);
+    String verifyuser(String verificationCode);
 }

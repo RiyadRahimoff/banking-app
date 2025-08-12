@@ -24,7 +24,7 @@ public class RegisterController{
 
     @PostMapping("/verify")
     @ResponseStatus(HttpStatus.OK)
-    public boolean verifyuser(String otpCode) {
+    public String verifyuser(String otpCode) {
         return registerService.verifyuser(otpCode);
     }
 
