@@ -68,7 +68,7 @@ public class AuthServiceHandler implements AuthService {
     }
 
     @Override
-    public void logout(Long id) {
-        refreshTokenService.deleteRefreshToken(id);
+    public void logout(String email) {
+        refreshTokenService.deleteRefreshToken(email);
     }
 }

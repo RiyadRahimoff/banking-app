@@ -25,8 +25,8 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestParam Long id) {
-        authService.logout(id);
+    public ResponseEntity<?> logout(@RequestParam String email) {
+        authService.logout(email);
         return ResponseEntity.ok("Logout successfully");
     }
 }

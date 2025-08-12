@@ -9,5 +9,5 @@ public interface AuthService {
 
     LoginResponse refreshToken(CreateRefreshTokenRequest refreshTokenRequest);
 
-    void logout(Long id);
+    void logout(String email);
 }

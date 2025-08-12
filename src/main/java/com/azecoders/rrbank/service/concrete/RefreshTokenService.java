@@ -25,8 +25,8 @@ public class RefreshTokenService {
         return redisTemplate.opsForValue().get(String.valueOf(id));
     }
 
-    public void deleteRefreshToken(Long id) {
-        redisTemplate.delete(String.valueOf(id));
+    public void deleteRefreshToken(String email) {
+        redisTemplate.delete(email);
     }
 
 }
