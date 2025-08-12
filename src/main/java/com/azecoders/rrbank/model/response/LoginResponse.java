@@ -1,6 +1,8 @@
 package com.azecoders.rrbank.model.response;
 
 import com.azecoders.rrbank.model.enums.UserStatus;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,9 +24,6 @@ public class LoginResponse {
     String email;
     String phoneNumber;
     String prefixs;
-    LocalDate birthDate;
-    String address;
-    String nationalID;
     boolean isVerified;
     UserStatus userStatus;
     String accessToken;

@@ -19,3 +19,14 @@ spring:
           auth: true
           starttls:
             enable: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+jwt:
+  secret: 5c32083d4a3dc3686ec57373b2f1f240dd0f693abff056b0637088e1e2ae9ce2
+  access-expiration: 900000
+  refresh-expiration: 604800000
+
