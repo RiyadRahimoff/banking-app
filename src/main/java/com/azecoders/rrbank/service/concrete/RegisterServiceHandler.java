@@ -4,6 +4,7 @@ import com.azecoders.rrbank.dao.entity.UserEntity;
 import com.azecoders.rrbank.dao.repository.UserRepository;
 import com.azecoders.rrbank.exception.UserFoundException;
 import com.azecoders.rrbank.mapper.UserMapper;
+import com.azecoders.rrbank.model.enums.UserStatus;
 import com.azecoders.rrbank.model.requests.CreateRegisterRequest;
 import com.azecoders.rrbank.model.response.RegisterResponse;
 import com.azecoders.rrbank.service.abstraction.RegisterService;
@@ -25,7 +26,7 @@ public class RegisterServiceHandler implements RegisterService {
     @Override
     public RegisterResponse registerUser(CreateRegisterRequest registerRequest) {
         if (userRepository.existsByEmail(registerRequest.getEmail())) {
-            throw new UserFoundException(USER_NOT_FOUND.getCode(),USER_NOT_FOUND.getMessage());
+            throw new UserFoundException(USER_NOT_FOUND.getCode(), USER_NOT_FOUND.getMessage());
         }
         String encodedPassword = passwordEncoder.encode(registerRequest.getPassword());
         String otpCode = VerificationCodeGenerator.generateCode();
@@ -33,16 +34,30 @@ public class RegisterServiceHandler implements RegisterService {
         userRepository.save(user);
 
         try {
-            mailService.sendVerificationCode(user.getEmail(), otpCode,user.getFullName());
+            mailService.sendVerificationCode(user.getEmail(), otpCode, user.getFullName());
         } catch (MailSendException e) {
             throw new RuntimeException("OTP message cannot be send please try again!");
         }
 
-      return UserMapper.toResponse(user);
+        return UserMapper.toResponse(user);
     }
 
     @Override
-    public boolean verifyuser(String verificationCode) {
-        return false;
+    public boolean verifyuser(String otpCode) {
+        UserEntity user = userRepository.findByOtpCode(otpCode)
+                .orElseThrow(() -> new MailSendException("Valid or expired code"));
+
+        user.setUserStatus(UserStatus.ACTIVE);
+        user.setVerified(true);
+        user.setOtpCode(null);
+        userRepository.save(user);
+        try {
+            mailService.sendAccountConfirmedMessage(user.getEmail(), user.getFullName());
+        } catch (MailSendException e) {
+            throw new MailSendException("OTP message cannot be send please try again!");
+        }
+        return true;
+
+
     }
 }

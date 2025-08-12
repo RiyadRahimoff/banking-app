@@ -77,10 +77,6 @@ databaseChangeLog:
                   type: VARCHAR(10)
 
               - column:
-                  name: otp_expiry
-                  type: TIMESTAMP
-
-              - column:
                   name: created_at
                   type: TIMESTAMP
                   defaultValueComputed: CURRENT_TIMESTAMP

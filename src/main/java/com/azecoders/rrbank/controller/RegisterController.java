@@ -16,9 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class RegisterController{
     private final RegisterServiceHandler registerService;
 
-    @PostMapping("/register")
+    @PostMapping("/signup")
     @ResponseStatus(HttpStatus.OK)
     public RegisterResponse registerUser(CreateRegisterRequest registerRequest) {
         return registerService.registerUser(registerRequest);
     }
+
+    @PostMapping("/verify")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean verifyuser(String otpCode) {
+        return registerService.verifyuser(otpCode);
+    }
+
 }

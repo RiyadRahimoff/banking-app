@@ -62,8 +62,6 @@ public class UserEntity {
 
     String otpCode;
 
-    LocalDateTime otpExpiry;
-
     String address;
 
     String nationalId;
