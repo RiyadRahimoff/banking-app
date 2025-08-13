@@ -35,13 +35,13 @@ public class SecurityConfig {
 
                                 "/api/auth/signup",
                                 "/api/auth/verify",
-                                "/api/auth/login",
-                                "/api/auth/refresh",
-                                "/api/auth/logout",
+                                "/api/login",
+                                "/api/refresh",
+                                "/api/logout",
 
-                                "/api/user/update",
-                                "/api/user/reset-password",
-                                "/api/user/update-password"
+                                "/api/update",
+                                "/api/reset-password",
+                                "/api/update-password"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

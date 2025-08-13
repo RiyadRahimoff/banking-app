@@ -42,4 +42,17 @@ public class MailServiceHandler implements MailService {
             throw new MailSendException("Mail system not working!");
         }
     }
+
+    @Override
+    public void sendPasswordResetMessage(String to,String fullName){
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setText(fullName+" your password changed.If you don't change report us about this.");
+        try {
+            mailSender.send(message);
+        }catch (Exception exception){
+            throw new MailSendException("Mail system not working!");
+        }
+    }
+
 }
