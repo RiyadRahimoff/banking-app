@@ -32,15 +32,16 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
-                                "/api/signup",
-                                "/api/verify",
-                                "/api/login",
-                                "/api/refresh",
-                                "/api/logout",
-                                "/api/update",
-                                "/user/complete",
-                                "/api/enums/professions",
-                                "/api/v1/files/upload"
+
+                                "/api/auth/signup",
+                                "/api/auth/verify",
+                                "/api/auth/login",
+                                "/api/auth/refresh",
+                                "/api/auth/logout",
+
+                                "/api/user/update",
+                                "/api/user/reset-password",
+                                "/api/user/update-password"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
