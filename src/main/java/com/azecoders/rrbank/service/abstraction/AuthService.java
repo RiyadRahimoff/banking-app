@@ -10,4 +10,8 @@ public interface AuthService {
     LoginResponse refreshToken(CreateRefreshTokenRequest refreshTokenRequest);
 
     void logout(String email);
+
+    void resetPassword(String email);
+
+    String verifyReset(String verificationCode,String newPassword);
 }

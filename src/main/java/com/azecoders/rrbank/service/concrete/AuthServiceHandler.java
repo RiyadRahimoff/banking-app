@@ -2,13 +2,19 @@ package com.azecoders.rrbank.service.concrete;
 
 import com.azecoders.rrbank.dao.entity.UserEntity;
 import com.azecoders.rrbank.dao.repository.UserRepository;
+import com.azecoders.rrbank.exception.UserFoundException;
 import com.azecoders.rrbank.model.requests.CreateLoginRequest;
 import com.azecoders.rrbank.model.requests.CreateRefreshTokenRequest;
 import com.azecoders.rrbank.model.response.LoginResponse;
 import com.azecoders.rrbank.service.abstraction.AuthService;
+import com.azecoders.rrbank.util.VerificationCodeGenerator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.mail.MailSendException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import static com.azecoders.rrbank.model.enums.ExceptionEnums.USER_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +23,7 @@ public class AuthServiceHandler implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
+    private final MailServiceHandler mailServiceHandler;
 
     @Override
     public LoginResponse login(CreateLoginRequest loginRequest) {
@@ -71,4 +78,25 @@ public class AuthServiceHandler implements AuthService {
     public void logout(String email) {
         refreshTokenService.deleteRefreshToken(email);
     }
+
+    @Override
+    public void resetPassword(String email) {
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new UserFoundException(USER_NOT_FOUND.getCode(), USER_NOT_FOUND.getMessage()));
+        String resetOtp = VerificationCodeGenerator.generateCode();
+        user.setOtpCode(resetOtp);
+        userRepository.save(user);
+        mailServiceHandler.sendVerificationCode(user.getEmail(),resetOtp,user.getFullName());
+    }
+
+    public String verifyReset(String verificationCode,String newPassword){
+        UserEntity user = userRepository.findByOtpCode(verificationCode)
+                .orElseThrow(() -> new MailSendException("Valid or expired code"));
+        String encodedPass= passwordEncoder.encode(newPassword);
+        user.setPassword(encodedPass);
+        user.setOtpCode(null);
+        userRepository.save(user);
+        return "Password updated";
+    }
+
 }
