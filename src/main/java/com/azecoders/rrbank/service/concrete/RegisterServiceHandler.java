@@ -43,7 +43,7 @@ public class RegisterServiceHandler implements RegisterService {
     }
 
     @Override
-    public String verifyuser(String otpCode) {
+    public String verifyUser(String otpCode) {
         UserEntity user = userRepository.findByOtpCode(otpCode)
                 .orElseThrow(() -> new MailSendException("Valid or expired code"));
 
