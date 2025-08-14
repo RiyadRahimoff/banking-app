@@ -10,11 +10,10 @@ import com.azecoders.rrbank.model.response.LoginResponse;
 import com.azecoders.rrbank.service.abstraction.AuthService;
 import com.azecoders.rrbank.util.VerificationCodeGenerator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.MailSendException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import static com.azecoders.rrbank.model.enums.ExceptionEnums.USER_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -77,7 +76,7 @@ public class AuthServiceHandler implements AuthService {
     @Override
     public void logout(String email) {
         UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserFoundException(USER_NOT_FOUND.getCode(), USER_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new UserFoundException("User not found by this email: "+email, HttpStatus.BAD_REQUEST));
         user.setUserStatus(UserStatus.LOGOUT);
         userRepository.save(user);
         refreshTokenService.deleteRefreshToken(email);
@@ -86,7 +85,7 @@ public class AuthServiceHandler implements AuthService {
     @Override
     public void resetPassword(String email) {
         UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserFoundException(USER_NOT_FOUND.getCode(), USER_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new UserFoundException("User not found by this email: "+email,HttpStatus.BAD_REQUEST));
         String resetOtp = VerificationCodeGenerator.generateCode();
         user.setOtpCode(resetOtp);
         userRepository.save(user);

@@ -6,6 +6,7 @@ import com.azecoders.rrbank.exception.UserFoundException;
 import com.azecoders.rrbank.model.requests.CreateUserInformationRequest;
 import com.azecoders.rrbank.service.abstraction.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,7 +20,7 @@ public class UserServiceHandler implements UserService {
     @Override
     public void updateInfo(CreateUserInformationRequest createUserInformationRequest,String email) {
         UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(()->new UserFoundException(USER_NOT_FOUND.getCode(), USER_NOT_FOUND.getMessage()));
+                .orElseThrow(()->new UserFoundException("User not found:"+email, HttpStatus.BAD_REQUEST));
 
         user.setAddress(createUserInformationRequest.getAdress());
 

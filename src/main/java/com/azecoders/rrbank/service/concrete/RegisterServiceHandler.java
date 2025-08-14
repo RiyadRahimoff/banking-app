@@ -10,6 +10,7 @@ import com.azecoders.rrbank.model.response.RegisterResponse;
 import com.azecoders.rrbank.service.abstraction.RegisterService;
 import com.azecoders.rrbank.util.VerificationCodeGenerator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.MailSendException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class RegisterServiceHandler implements RegisterService {
     @Override
     public RegisterResponse registerUser(CreateRegisterRequest registerRequest) {
         if (userRepository.existsByEmail(registerRequest.getEmail())) {
-            throw new UserFoundException(USER_NOT_FOUND.getCode(), USER_NOT_FOUND.getMessage());
+            throw new UserFoundException("User not found by this email: "+registerRequest.getEmail(), HttpStatus.BAD_REQUEST);
         }
         String encodedPassword = passwordEncoder.encode(registerRequest.getPassword());
         String otpCode = VerificationCodeGenerator.generateCode();
