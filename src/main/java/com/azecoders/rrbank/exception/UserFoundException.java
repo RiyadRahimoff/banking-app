@@ -1,7 +1,18 @@
 package com.azecoders.rrbank.exception;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+
+@RequiredArgsConstructor
 public class UserFoundException extends RuntimeException {
-  public UserFoundException(String message) {
-    super(message);
-  }
+    private final HttpStatus status;
+
+    public UserFoundException(String message, HttpStatus status) {
+        super(message);
+        this.status = status;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
+    }
 }
