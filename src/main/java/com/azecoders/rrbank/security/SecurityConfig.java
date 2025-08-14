@@ -36,6 +36,7 @@ public class SecurityConfig {
                                 "/api/auth/signup",
                                 "/api/auth/verify",
                                 "/api/login",
+                                "/api/account/create-account",
                                 "/api/refresh",
                                 "/api/logout",
 

@@ -13,74 +13,58 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
-
               - column:
                   name: full_name
                   type: VARCHAR(100)
                   constraints:
                     nullable: false
-
               - column:
                   name: email
                   type: VARCHAR(100)
                   constraints:
                     nullable: false
                     unique: true
-
               - column:
                   name: password
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
-
               - column:
                   name: phone_prefix
                   type: VARCHAR(10)
-
               - column:
                   name: phone_number
                   type: VARCHAR(20)
-
               - column:
                   name: birth_date
                   type: DATE
-
               - column:
                   name: address
                   type: VARCHAR(255)
-
               - column:
                   name: national_id
                   type: VARCHAR(20)
-
-
               - column:
                   name: is_verified
                   type: BOOLEAN
-
-
               - column:
                   name: user_status
                   type: VARCHAR(20)
                   defaultValue: ACTIVE
                   constraints:
                     nullable: false
-
               - column:
                   name: user_role
                   type: VARCHAR(50)
                   constraints:
                     nullable: false
-
               - column:
                   name: otp_code
                   type: VARCHAR(10)
-
               - column:
                   name: created_at
                   type: TIMESTAMP
                   defaultValueComputed: CURRENT_TIMESTAMP
-
               - column:
                   name: updated_at
                   type: TIMESTAMP
