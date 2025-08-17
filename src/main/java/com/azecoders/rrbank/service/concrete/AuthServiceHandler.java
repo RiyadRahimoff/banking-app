@@ -33,6 +33,7 @@ public class AuthServiceHandler implements AuthService {
             throw new RuntimeException("Password incorrect");
         }
 
+        user.setUserStatus(UserStatus.ACTIVE);
         String accessToken = jwtService.generateAccessToken(user.getId());
         String refreshToken = jwtService.generateRefreshToken(user.getId());
         refreshTokenService.saveRefreshToken(user.getId(), refreshToken);

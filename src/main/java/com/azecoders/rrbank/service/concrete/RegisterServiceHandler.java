@@ -48,7 +48,6 @@ public class RegisterServiceHandler implements RegisterService {
         UserEntity user = userRepository.findByOtpCode(otpCode)
                 .orElseThrow(() -> new MailSendException("Valid or expired code"));
 
-        user.setUserStatus(UserStatus.ACTIVE);
         user.setVerified(true);
         user.setOtpCode(null);
         userRepository.save(user);

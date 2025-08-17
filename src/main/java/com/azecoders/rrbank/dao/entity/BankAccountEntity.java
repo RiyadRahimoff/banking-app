@@ -1,8 +1,24 @@
 package com.azecoders.rrbank.dao.entity;
 
 import com.azecoders.rrbank.model.enums.AccountCurrency;
-import jakarta.persistence.*;
-import lombok.*;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -24,22 +40,22 @@ import static lombok.AccessLevel.PRIVATE;
 public class BankAccountEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-     Long id;
+    Long id;
 
-     String accountNumber;
+    String accountNumber;
 
-     BigDecimal balance;
+    BigDecimal balance;
 
-     @Enumerated(EnumType.STRING)
-     AccountCurrency accountType;
+    @Enumerated(EnumType.STRING)
+    AccountCurrency accountType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-     UserEntity user;
+    UserEntity user;
 
     @CreationTimestamp
-     LocalDateTime createdAt;
+    LocalDateTime createdAt;
 
     @UpdateTimestamp
-     LocalDateTime updatedAt;
+    LocalDateTime updatedAt;
 }

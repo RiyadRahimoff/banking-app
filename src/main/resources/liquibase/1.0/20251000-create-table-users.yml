@@ -59,6 +59,9 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: pending_withdraw_amount
+                  type: DECIMAL(19,2)
+              - column:
                   name: otp_code
                   type: VARCHAR(10)
               - column:

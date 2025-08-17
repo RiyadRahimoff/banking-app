@@ -21,13 +21,34 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, ex.getStatus());
     }
 
-    public ResponseEntity<ErrorDetails> handlePasswordSame(IllegalArgumentException ex){
+    @ExceptionHandler(AccountFoundException.class)
+    public ResponseEntity<ErrorDetails> handleAccountNotFound(AccountFoundException ex) {
+        ErrorDetails error = new ErrorDetails(
+                ex.getMessage(),
+                LocalDateTime.now(),
+                ex.getStatus()
+        );
+        return new ResponseEntity<>(error, ex.getStatus());
+    }
+
+    @ExceptionHandler(TransactionException.class)
+    public ResponseEntity<ErrorDetails> transactionHandleError(TransactionException ex) {
+        ErrorDetails error = new ErrorDetails(
+                ex.getMessage(),
+                LocalDateTime.now(),
+                ex.getStatus()
+        );
+        return new ResponseEntity<>(error, ex.getStatus());
+    }
+
+
+    public ResponseEntity<ErrorDetails> handlePasswordSame(IllegalArgumentException ex) {
         ErrorDetails errorDetails = new ErrorDetails(
                 ex.getMessage(),
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST
         );
-        return new ResponseEntity<>(errorDetails,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
 }
