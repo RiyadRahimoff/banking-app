@@ -37,6 +37,8 @@ public class UserEntity {
 
     String password;
 
+    int loginAttempts;
+
     String phoneNumber;
 
     @Enumerated(STRING)
