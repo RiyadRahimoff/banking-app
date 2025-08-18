@@ -30,6 +30,10 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: login_attempts
+                  type: int
+                  defaultValueNumeric: 0
+              - column:
                   name: phone_prefix
                   type: VARCHAR(10)
               - column:
