@@ -33,6 +33,7 @@ public class BankAccountServiceHandler implements BankAccountService {
                 .orElseThrow(() -> new UserFoundException("User not found", HttpStatus.BAD_REQUEST));
 
 
+        validateActiveUser(user);
         BankAccountEntity accountEntity = AccountMapper.toEntity(accountRequest);
         accountEntity.setUser(user);
         accountEntity.setAccountNumber(AccountNumberGenerator.generateCode());
@@ -67,6 +68,8 @@ public class BankAccountServiceHandler implements BankAccountService {
     public String deposit(Long id, BigDecimal deposit) {
         BankAccountEntity accountEntity = bankAccountRepository.findById(id)
                 .orElseThrow(() -> new AccountFoundException("Account not found!", HttpStatus.BAD_REQUEST));
+        UserEntity user = accountEntity.getUser();
+        validateActiveUser(user);
         if (deposit.compareTo(BigDecimal.ZERO) <= 0) {
             throw new TransactionException("Deposit amount must be positive!",HttpStatus.UNPROCESSABLE_ENTITY);
         }
@@ -80,6 +83,7 @@ public class BankAccountServiceHandler implements BankAccountService {
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new UserFoundException("User not found", HttpStatus.BAD_REQUEST));
 
+        validateActiveUser(user);
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new TransactionException("Deposit amount must be positive!",HttpStatus.UNPROCESSABLE_ENTITY);
         }
@@ -105,6 +109,7 @@ public class BankAccountServiceHandler implements BankAccountService {
     public String confirmWithdraw(Long id, String otpCode) {
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new UserFoundException("User not found", HttpStatus.BAD_REQUEST));
+        validateActiveUser(user);
         if (!otpCode.equals(user.getOtpCode())) {
             throw new RuntimeException("Invalid OTP");
         }
@@ -136,5 +141,11 @@ public class BankAccountServiceHandler implements BankAccountService {
     @Override
     public void freezeAccount(Long accountId) {
 
+    }
+
+    private void validateActiveUser(UserEntity user) {
+        if (!"ACTIVE".equalsIgnoreCase(String.valueOf(user.getUserStatus()))) {
+            throw new TransactionException("User account is not active!", HttpStatus.FORBIDDEN);
+        }
     }
 }

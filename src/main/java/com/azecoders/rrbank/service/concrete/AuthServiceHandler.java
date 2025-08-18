@@ -3,6 +3,7 @@ package com.azecoders.rrbank.service.concrete;
 import com.azecoders.rrbank.dao.entity.UserEntity;
 import com.azecoders.rrbank.dao.repository.UserRepository;
 import com.azecoders.rrbank.exception.UserFoundException;
+import com.azecoders.rrbank.model.enums.UserRole;
 import com.azecoders.rrbank.model.enums.UserStatus;
 import com.azecoders.rrbank.model.requests.CreateLoginRequest;
 import com.azecoders.rrbank.model.requests.CreateRefreshTokenRequest;
@@ -28,6 +29,10 @@ public class AuthServiceHandler implements AuthService {
     public LoginResponse login(CreateLoginRequest loginRequest) {
         UserEntity user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if ("BLOCKED".equals(user.getUserStatus())) {
+            throw new RuntimeException("Account is blocked. Contact admin.");
+        }
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new RuntimeException("Password incorrect");
