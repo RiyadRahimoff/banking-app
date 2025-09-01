@@ -50,6 +50,7 @@ public class RegisterServiceHandler implements RegisterService {
 
         user.setVerified(true);
         user.setOtpCode(null);
+        user.setUserStatus(UserStatus.ACTIVE);
         userRepository.save(user);
         try {
             mailService.sendAccountConfirmedMessage(user.getEmail(), user.getFullName());

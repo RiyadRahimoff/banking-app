@@ -27,34 +27,6 @@ public class BankAccountServiceHandler implements BankAccountService {
     private final BankAccountRepository bankAccountRepository;
     private final MailServiceHandler mailServiceHandler;
 
-    @Override
-    public AccountResponse createAccount(CreateAccountRequest accountRequest) {
-        UserEntity user = userRepository.findById(accountRequest.getUserId())
-                .orElseThrow(() -> new UserFoundException("User not found", HttpStatus.BAD_REQUEST));
-
-
-        validateActiveUser(user);
-        BankAccountEntity accountEntity = AccountMapper.toEntity(accountRequest);
-        accountEntity.setUser(user);
-        accountEntity.setAccountNumber(AccountNumberGenerator.generateCode());
-
-        bankAccountRepository.save(accountEntity);
-
-        return AccountResponse.builder()
-                .id(accountEntity.getId())
-                .accountType(accountEntity.getAccountType())
-                .isVerified(user.isVerified())
-                .fullName(user.getFullName())
-                .email(user.getEmail())
-                .prefixs(String.valueOf(user.getPhonePrefix()))
-                .phoneNumber(user.getPhoneNumber())
-                .balance(accountEntity.getBalance())
-                .userId(user.getId())
-                .userStatus(user.getUserStatus())
-                .accountNumber(accountEntity.getAccountNumber())
-                .build();
-
-    }
 
     @Override
     public BigDecimal getBalance(Long accountId) {

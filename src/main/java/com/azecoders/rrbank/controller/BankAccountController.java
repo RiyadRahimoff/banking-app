@@ -18,11 +18,6 @@ import java.math.BigDecimal;
 public class BankAccountController {
     private final BankAccountServiceHandler serviceHandler;
 
-    @PostMapping("/create-account")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public AccountResponse createAccount(CreateAccountRequest accountRequest) {
-        return serviceHandler.createAccount(accountRequest);
-    }
 
     @PostMapping("/balance")
     @ResponseStatus(HttpStatus.OK)

@@ -1,13 +1,52 @@
 package com.azecoders.rrbank.util;
 
 import java.security.SecureRandom;
+import java.util.Random;
 
 public class AccountNumberGenerator {
-    private static final SecureRandom RANDOM = new SecureRandom();
+    private static final Random RANDOM = new Random();
 
-    public static String generateCode() {
-        long code = 100000000000L + (Math.abs(RANDOM.nextLong()) % 900000000000L);
-        return String.valueOf(code);
+    public static String generateMasterCard() {
+
+        String[] bins = {"51", "52", "53", "54", "55"};
+        String bin = bins[RANDOM.nextInt(bins.length)];
+
+        StringBuilder cardNumber = new StringBuilder(bin);
+
+        while (cardNumber.length() < 15) {
+            cardNumber.append(RANDOM.nextInt(10));
+        }
+
+
+        int checkDigit = getLuhnCheckDigit(cardNumber.toString());
+        cardNumber.append(checkDigit);
+
+        return cardNumber.toString();
+    }
+
+    private static int getLuhnCheckDigit(String number) {
+        int sum = 0;
+        boolean alternate = true;
+
+        for (int i = number.length() - 1; i >= 0; i--) {
+            int n = Integer.parseInt(number.substring(i, i + 1));
+            if (alternate) {
+                n *= 2;
+                if (n > 9) {
+                    n = (n % 10) + 1;
+                }
+            }
+            sum += n;
+            alternate = !alternate;
+        }
+        return (10 - (sum % 10)) % 10;
+    }
+
+    public static void main(String[] args) {
+
+        for (int i = 0; i < 5; i++) {
+            System.out.println(generateMasterCard());
+        }
     }
 
 }

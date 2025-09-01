@@ -1,24 +1,30 @@
 package com.azecoders.rrbank.service.concrete;
 
+import com.azecoders.rrbank.dao.entity.BankAccountEntity;
 import com.azecoders.rrbank.dao.entity.UserEntity;
+import com.azecoders.rrbank.dao.repository.AccountRepository;
 import com.azecoders.rrbank.dao.repository.UserRepository;
 import com.azecoders.rrbank.exception.AccountFoundException;
 import com.azecoders.rrbank.exception.UserFoundException;
+import com.azecoders.rrbank.mapper.AccountMapper;
+import com.azecoders.rrbank.model.enums.OrderStatus;
 import com.azecoders.rrbank.model.enums.UserStatus;
+import com.azecoders.rrbank.model.requests.CreateAccountRequest;
 import com.azecoders.rrbank.model.requests.CreateUserInformationRequest;
 import com.azecoders.rrbank.service.abstraction.UserService;
+import com.azecoders.rrbank.util.AccountNumberGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-
-import static com.azecoders.rrbank.model.enums.ExceptionEnums.USER_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceHandler implements UserService {
     private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
 
     @Override
     public void updateInfo(CreateUserInformationRequest createUserInformationRequest, String email) {
@@ -42,7 +48,19 @@ public class UserServiceHandler implements UserService {
     }
 
     @Override
-    public String orderAccount() {
-        return "";
+    public String orderAccount(CreateAccountRequest accountRequest,String email) {
+        UserEntity user =userRepository.findByEmail(email)
+                .orElseThrow(()->new AccountFoundException("Account not found",HttpStatus.CONFLICT));
+
+        BankAccountEntity accountEntity = AccountMapper.toEntity(accountRequest);
+        accountEntity.setAccountType(accountRequest.getAccountType());
+        accountEntity.setBalance(BigDecimal.ZERO);
+        accountEntity.setAccountStatus(OrderStatus.PENDING);
+        accountEntity.setAccountNumber(AccountNumberGenerator.generateMasterCard());
+        accountEntity.setUser(user);
+
+        accountRepository.save(accountEntity);
+
+        return "Your account request has been submitted and is pending admin approval.";
     }
 }

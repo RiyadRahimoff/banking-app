@@ -7,7 +7,6 @@ import com.azecoders.rrbank.model.response.AccountResponse;
 import java.math.BigDecimal;
 
 public interface BankAccountService {
-    AccountResponse createAccount(CreateAccountRequest accountRequest);
 
     BigDecimal getBalance(Long accountId);
 

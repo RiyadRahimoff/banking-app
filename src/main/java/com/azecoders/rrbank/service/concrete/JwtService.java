@@ -1,5 +1,6 @@
 package com.azecoders.rrbank.service.concrete;
 
+import com.azecoders.rrbank.model.enums.UserRole;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -21,29 +22,40 @@ public class JwtService {
     String secretKey;
     @Value("${jwt.access-expiration}")
     long accessExpiration;
-    @Value("${jwt.access-expiration}")
+    @Value("${jwt.refresh-expiration}")
     long refreshExpiration;
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateAccessToken(Long id) {
+    public String generateAccessToken(Long id,UserRole role) {
         return Jwts.builder()
                 .setSubject(String.valueOf(id))
+                .claim("role", role.name())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + accessExpiration))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String generateRefreshToken(Long id) {
+    public String generateRefreshToken(Long id,UserRole role) {
         return Jwts.builder()
                 .setSubject(String.valueOf(id))
+                .claim("role", role.name())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + refreshExpiration))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    public String extractRole(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("role", String.class);
     }
 
     public String extractId(String token) {

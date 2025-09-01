@@ -44,6 +44,13 @@ public class MailServiceHandler implements MailService {
     }
 
     @Override
+    public void sendAccountUnblockedMessage(String to, String fullName) {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(to);
+        mailMessage.setText("Dear "+fullName+" your account unblocked.If you don't know your password,you can reset now.");
+    }
+
+    @Override
     public void sendPasswordResetMessage(String to,String fullName){
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);

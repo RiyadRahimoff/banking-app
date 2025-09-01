@@ -5,5 +5,7 @@ public interface MailService {
 
     void sendAccountConfirmedMessage(String to, String fullName);
 
+    void sendAccountUnblockedMessage(String to,String fullName);
+
     void sendPasswordResetMessage(String to,String fullName);
 }

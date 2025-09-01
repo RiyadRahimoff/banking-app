@@ -2,6 +2,8 @@ package com.azecoders.rrbank.dao.entity;
 
 import com.azecoders.rrbank.model.enums.AccountCurrency;
 
+import com.azecoders.rrbank.model.enums.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -47,10 +49,14 @@ public class BankAccountEntity {
     BigDecimal balance;
 
     @Enumerated(EnumType.STRING)
+    OrderStatus accountStatus;
+
+    @Enumerated(EnumType.STRING)
     AccountCurrency accountType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     UserEntity user;
 
     @CreationTimestamp

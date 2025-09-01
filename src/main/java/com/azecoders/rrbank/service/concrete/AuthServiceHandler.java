@@ -2,6 +2,7 @@ package com.azecoders.rrbank.service.concrete;
 
 import com.azecoders.rrbank.dao.entity.UserEntity;
 import com.azecoders.rrbank.dao.repository.UserRepository;
+import com.azecoders.rrbank.exception.AccountFoundException;
 import com.azecoders.rrbank.exception.UserFoundException;
 import com.azecoders.rrbank.model.enums.UserRole;
 import com.azecoders.rrbank.model.enums.UserStatus;
@@ -28,19 +29,26 @@ public class AuthServiceHandler implements AuthService {
     @Override
     public LoginResponse login(CreateLoginRequest loginRequest) {
         UserEntity user = userRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new AccountFoundException("User not found", HttpStatus.BAD_REQUEST));
 
-        if ("BLOCKED".equals(user.getUserStatus())) {
-            throw new RuntimeException("Account is blocked. Contact admin.");
+        if (user.getLoginAttempts() >= 3) {
+            user.setUserStatus(UserStatus.BLOCKED);
+            userRepository.save(user);
+        }
+
+        if (user.getUserStatus() == UserStatus.BLOCKED) {
+            throw new AccountFoundException("Account is blocked. Contact admin.", HttpStatus.LOCKED);
         }
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Password incorrect");
+            user.setLoginAttempts(user.getLoginAttempts() + 1);
+            userRepository.save(user);
+            throw new AccountFoundException("Password incorrect", HttpStatus.BAD_REQUEST);
         }
 
         user.setUserStatus(UserStatus.ACTIVE);
-        String accessToken = jwtService.generateAccessToken(user.getId());
-        String refreshToken = jwtService.generateRefreshToken(user.getId());
+        String accessToken = jwtService.generateAccessToken(user.getId(), user.getUserRole());
+        String refreshToken = jwtService.generateRefreshToken(user.getId(), user.getUserRole());
         refreshTokenService.saveRefreshToken(user.getId(), refreshToken);
 
         return LoginResponse.builder()
@@ -61,14 +69,17 @@ public class AuthServiceHandler implements AuthService {
     public LoginResponse refreshToken(CreateRefreshTokenRequest refreshTokenRequest) {
         String id = jwtService.extractId(refreshTokenRequest.getRefreshToken());
 
+        UserEntity user = userRepository.findById(Long.valueOf(id))
+                .orElseThrow(() -> new UserFoundException("User not found", HttpStatus.BAD_REQUEST));
+
         String savedRefreshToken = refreshTokenService.getRefreshToken(Long.valueOf(id));
 
         if (savedRefreshToken == null || !savedRefreshToken.equals(refreshTokenRequest.getRefreshToken())) {
             throw new RuntimeException("Refresh token invalid");
         }
 
-        String newAccessToken = jwtService.generateAccessToken(Long.valueOf(id));
-        String newRefreshToken = jwtService.generateRefreshToken(Long.valueOf(id));
+        String newAccessToken = jwtService.generateAccessToken(Long.valueOf(id), user.getUserRole());
+        String newRefreshToken = jwtService.generateRefreshToken(Long.valueOf(id), user.getUserRole());
 
         refreshTokenService.saveRefreshToken(Long.valueOf(id), newRefreshToken);
 
@@ -82,7 +93,7 @@ public class AuthServiceHandler implements AuthService {
     @Override
     public void logout(String email) {
         UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserFoundException("User not found by this email: "+email, HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new UserFoundException("User not found by this email: " + email, HttpStatus.BAD_REQUEST));
         user.setUserStatus(UserStatus.LOGOUT);
         userRepository.save(user);
         refreshTokenService.deleteRefreshToken(email);
@@ -91,11 +102,16 @@ public class AuthServiceHandler implements AuthService {
     @Override
     public void resetPassword(String email) {
         UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserFoundException("User not found by this email: "+email,HttpStatus.BAD_REQUEST));
-        String resetOtp = VerificationCodeGenerator.generateCode();
-        user.setOtpCode(resetOtp);
-        userRepository.save(user);
-        mailServiceHandler.sendVerificationCode(user.getEmail(), resetOtp, user.getFullName());
+                .orElseThrow(() -> new UserFoundException("User not found by this email: " + email, HttpStatus.BAD_REQUEST));
+        if (user.getUserStatus() == UserStatus.BLOCKED) {
+            throw new AccountFoundException("Account is blocked. Contact admin.", HttpStatus.LOCKED);
+        } else {
+            String resetOtp = VerificationCodeGenerator.generateCode();
+            user.setOtpCode(resetOtp);
+            userRepository.save(user);
+            mailServiceHandler.sendVerificationCode(user.getEmail(), resetOtp, user.getFullName());
+
+        }
     }
 
     public String verifyReset(String verificationCode, String newPassword) {

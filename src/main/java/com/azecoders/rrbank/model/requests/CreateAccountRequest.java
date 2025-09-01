@@ -2,12 +2,10 @@ package com.azecoders.rrbank.model.requests;
 
 import com.azecoders.rrbank.model.enums.AccountCurrency;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.math.BigDecimal;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -16,13 +14,6 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor
 @FieldDefaults(level = PRIVATE)
 public class CreateAccountRequest {
-    @NotNull(message = "Balance cannot be null!")
-    BigDecimal balance;
-
     @NotBlank(message = "Account currency must be selected")
     AccountCurrency accountType;
-
-    @NotEmpty(message = "User id cannot be empty!")
-    Long userId;
-
 }
