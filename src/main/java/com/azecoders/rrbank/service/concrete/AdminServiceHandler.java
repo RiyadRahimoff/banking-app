@@ -3,6 +3,7 @@ package com.azecoders.rrbank.service.concrete;
 import com.azecoders.rrbank.dao.entity.BankAccountEntity;
 import com.azecoders.rrbank.dao.entity.UserEntity;
 import com.azecoders.rrbank.dao.repository.AdminRepository;
+import com.azecoders.rrbank.dao.repository.BankAccountRepository;
 import com.azecoders.rrbank.dao.repository.UserRepository;
 import com.azecoders.rrbank.exception.AccountFoundException;
 import com.azecoders.rrbank.model.enums.OrderStatus;
@@ -25,6 +26,7 @@ public class AdminServiceHandler implements AdminService {
     final AdminRepository adminRepository;
     final UserRepository userRepository;
     final MailServiceHandler mailServiceHandler;
+    final BankAccountRepository accountRepository;
 
     @Override
     public List<BankAccountEntity> allPendingAccounts() {
@@ -47,5 +49,33 @@ public class AdminServiceHandler implements AdminService {
 
 
         return "Account unblocked by admin";
+    }
+
+    @Override
+    public String acceptAccountOrder(Long id) {
+        BankAccountEntity account = accountRepository.findById(id)
+                .orElseThrow(()->new AccountFoundException("Account not found!",HttpStatus.NOT_FOUND));
+        account.setAccountStatus(OrderStatus.APPROVED);
+        accountRepository.save(account);
+        try{
+           mailServiceHandler.sendAccountAcceptStatusMessage(account.getUser().getEmail(),account.getUser().getFullName());
+        } catch (MailSendException e) {
+            throw new MailSendException("Mail cannot be send");
+        }
+        return "Account created!";
+    }
+
+    @Override
+    public String rejectAccountOrder(Long id) {
+        BankAccountEntity account = accountRepository.findById(id)
+                .orElseThrow(()->new AccountFoundException("Account not found!",HttpStatus.NOT_FOUND));
+        account.setAccountStatus(OrderStatus.REJECTED);
+        accountRepository.save(account);
+        try{
+            mailServiceHandler.sendAccountAcceptStatusMessage(account.getUser().getEmail(),account.getUser().getFullName());
+        } catch (MailSendException e) {
+            throw new MailSendException("Mail cannot be send");
+        }
+        return "Account rejected!";
     }
 }

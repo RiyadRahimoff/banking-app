@@ -6,6 +6,11 @@ import java.util.List;
 
 public interface AdminService {
     List<BankAccountEntity> allPendingAccounts();
+
     String unblockAccount(String nationalID);
+
+    String acceptAccountOrder(Long id);
+
+    String rejectAccountOrder(Long id);
 
 }

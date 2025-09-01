@@ -36,4 +36,16 @@ public class AdminController {
         return serviceHandler.unblockAccount(nationalID);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("approve-account")
+    public String acceptAccountOrder(@RequestParam Long id) {
+       return serviceHandler.acceptAccountOrder(id);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/reject-account")
+    public String rejectAccountOrder(@RequestParam Long id) {
+        return serviceHandler.rejectAccountOrder(id);
+    }
+
 }
