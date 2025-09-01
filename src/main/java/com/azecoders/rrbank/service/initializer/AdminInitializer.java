@@ -26,6 +26,6 @@ public class AdminInitializer implements CommandLineRunner {
         admin.setVerified(true);
         admin.setUserStatus(UserStatus.ACTIVE);
         userRepository.save(admin);
-gi
+
     }
 }
