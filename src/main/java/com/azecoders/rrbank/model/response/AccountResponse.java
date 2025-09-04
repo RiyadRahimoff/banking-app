@@ -1,6 +1,7 @@
 package com.azecoders.rrbank.model.response;
 
 import com.azecoders.rrbank.model.enums.AccountCurrency;
+import com.azecoders.rrbank.model.enums.OrderStatus;
 import com.azecoders.rrbank.model.enums.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +27,7 @@ public class AccountResponse {
     String prefixs;
     boolean isVerified;
     UserStatus userStatus;
+    OrderStatus orderStatus;
     String accountNumber;
     BigDecimal balance;
     AccountCurrency accountType;

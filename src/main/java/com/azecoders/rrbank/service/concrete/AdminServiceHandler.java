@@ -8,6 +8,7 @@ import com.azecoders.rrbank.dao.repository.UserRepository;
 import com.azecoders.rrbank.exception.AccountFoundException;
 import com.azecoders.rrbank.model.enums.OrderStatus;
 import com.azecoders.rrbank.model.enums.UserStatus;
+import com.azecoders.rrbank.model.response.AccountResponse;
 import com.azecoders.rrbank.service.abstraction.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,8 +30,25 @@ public class AdminServiceHandler implements AdminService {
     final BankAccountRepository accountRepository;
 
     @Override
-    public List<BankAccountEntity> allPendingAccounts() {
-        return adminRepository.findAllByAccountStatus(OrderStatus.PENDING);
+    public List<AccountResponse> allPendingAccounts() {
+        return adminRepository.findAllByAccountStatus(OrderStatus.PENDING)
+                .stream()
+                .map(acc -> AccountResponse.builder()
+                        .id(acc.getId())
+                        .userId(acc.getUser().getId())
+                        .fullName(acc.getUser().getFullName())
+                        .email(acc.getUser().getEmail())
+                        .phoneNumber(acc.getUser().getPhoneNumber())
+                        .prefixs(String.valueOf(acc.getUser().getPhonePrefix()))
+                        .isVerified(acc.getUser().isVerified())
+                        .userStatus(acc.getUser().getUserStatus())
+                        .accountNumber(acc.getAccountNumber())
+                        .balance(acc.getBalance())
+                        .orderStatus(acc.getAccountStatus())
+                        .accountType(acc.getAccountType())
+                        .build()
+                )
+                .toList();
     }
 
     @Override

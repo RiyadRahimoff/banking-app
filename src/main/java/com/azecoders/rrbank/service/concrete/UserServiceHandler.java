@@ -56,7 +56,7 @@ public class UserServiceHandler implements UserService {
         accountEntity.setAccountType(accountRequest.getAccountType());
         accountEntity.setBalance(BigDecimal.ZERO);
         accountEntity.setAccountStatus(OrderStatus.PENDING);
-        accountEntity.setAccountNumber(AccountNumberGenerator.generateMasterCard());
+        accountEntity.setAccountNumber(AccountNumberGenerator.generateAccountNumber());
         accountEntity.setUser(user);
 
         accountRepository.save(accountEntity);

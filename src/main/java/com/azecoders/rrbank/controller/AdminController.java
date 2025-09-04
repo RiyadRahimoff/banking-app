@@ -2,6 +2,7 @@ package com.azecoders.rrbank.controller;
 
 import com.azecoders.rrbank.dao.entity.BankAccountEntity;
 import com.azecoders.rrbank.model.enums.OrderStatus;
+import com.azecoders.rrbank.model.response.AccountResponse;
 import com.azecoders.rrbank.service.concrete.AdminServiceHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class AdminController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/pending-accounts")
     @ResponseStatus(HttpStatus.OK)
-    public List<BankAccountEntity> allPendingAccounts() {
+    public List<AccountResponse> allPendingAccounts() {
         return serviceHandler.allPendingAccounts();
     }
 

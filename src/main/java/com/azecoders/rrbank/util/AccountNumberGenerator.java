@@ -4,48 +4,21 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 public class AccountNumberGenerator {
-    private static final Random RANDOM = new Random();
+    private static final SecureRandom RANDOM = new SecureRandom();
 
-    public static String generateMasterCard() {
+    public static String generateAccountNumber() {
+        StringBuilder accountNumber = new StringBuilder();
 
-        String[] bins = {"51", "52", "53", "54", "55"};
-        String bin = bins[RANDOM.nextInt(bins.length)];
-
-        StringBuilder cardNumber = new StringBuilder(bin);
-
-        while (cardNumber.length() < 15) {
-            cardNumber.append(RANDOM.nextInt(10));
+        for (int i = 0; i < 16; i++) {
+            accountNumber.append(RANDOM.nextInt(10));
         }
 
-
-        int checkDigit = getLuhnCheckDigit(cardNumber.toString());
-        cardNumber.append(checkDigit);
-
-        return cardNumber.toString();
-    }
-
-    private static int getLuhnCheckDigit(String number) {
-        int sum = 0;
-        boolean alternate = true;
-
-        for (int i = number.length() - 1; i >= 0; i--) {
-            int n = Integer.parseInt(number.substring(i, i + 1));
-            if (alternate) {
-                n *= 2;
-                if (n > 9) {
-                    n = (n % 10) + 1;
-                }
-            }
-            sum += n;
-            alternate = !alternate;
-        }
-        return (10 - (sum % 10)) % 10;
+        return accountNumber.toString();
     }
 
     public static void main(String[] args) {
-
         for (int i = 0; i < 5; i++) {
-            System.out.println(generateMasterCard());
+            System.out.println(generateAccountNumber());
         }
     }
 
