@@ -16,7 +16,7 @@ public interface BankAccountService {
 
     String confirmWithdraw(Long id, String otpCode);
 
-    void transfer(Long fromAccountId, Long toAccountId, BigDecimal amount);
+    void transfer(String fromCardNumber, String toCardNumber, BigDecimal amount);
 
     BankAccountEntity getAccountDetails(Long accountId);
 

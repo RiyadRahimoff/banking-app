@@ -1,10 +1,5 @@
 package com.azecoders.rrbank.controller;
 
-<<<<<<< HEAD
-=======
-import com.azecoders.rrbank.dao.entity.BankAccountEntity;
-import com.azecoders.rrbank.model.enums.OrderStatus;
->>>>>>> b8be9f1a352aeed605db1b55bd4251358224649d
 import com.azecoders.rrbank.model.response.AccountResponse;
 import com.azecoders.rrbank.service.concrete.AdminServiceHandler;
 import lombok.RequiredArgsConstructor;

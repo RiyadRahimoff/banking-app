@@ -1,8 +1,10 @@
 package com.azecoders.rrbank.service.concrete;
 
 import com.azecoders.rrbank.dao.entity.BankAccountEntity;
+import com.azecoders.rrbank.dao.entity.CardEntity;
 import com.azecoders.rrbank.dao.entity.UserEntity;
 import com.azecoders.rrbank.dao.repository.BankAccountRepository;
+import com.azecoders.rrbank.dao.repository.CardRepository;
 import com.azecoders.rrbank.dao.repository.UserRepository;
 import com.azecoders.rrbank.exception.AccountFoundException;
 import com.azecoders.rrbank.exception.TransactionException;
@@ -26,6 +28,7 @@ public class BankAccountServiceHandler implements BankAccountService {
     private final UserRepository userRepository;
     private final BankAccountRepository bankAccountRepository;
     private final MailServiceHandler mailServiceHandler;
+    private final CardRepository cardRepository;
 
 
     @Override
@@ -96,8 +99,21 @@ public class BankAccountServiceHandler implements BankAccountService {
     }
 
     @Override
-    public void transfer(Long fromAccountId, Long toAccountId, BigDecimal amount) {
+    public void transfer(String fromCardNumber, String toCardNumber, BigDecimal amount) {
+        CardEntity fromCard = cardRepository.findByCardNumber(fromCardNumber)
+                .orElseThrow(() -> new RuntimeException("From card not found"));
 
+        CardEntity toCard = cardRepository.findByCardNumber(toCardNumber)
+                .orElseThrow(() -> new RuntimeException("To card not found"));
+
+        BankAccountEntity fromAccount = fromCard.getAccount();
+        BankAccountEntity toAccount = toCard.getAccount();
+
+        fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
+        toAccount.setBalance(toAccount.getBalance().add(amount));
+
+        bankAccountRepository.save(fromAccount);
+        bankAccountRepository.save(toAccount);
     }
 
     @Override

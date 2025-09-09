@@ -1,9 +1,6 @@
 package com.azecoders.rrbank.service.abstraction;
 
-<<<<<<< HEAD
-=======
-import com.azecoders.rrbank.dao.entity.BankAccountEntity;
->>>>>>> b8be9f1a352aeed605db1b55bd4251358224649d
+
 import com.azecoders.rrbank.model.response.AccountResponse;
 
 import java.util.List;
