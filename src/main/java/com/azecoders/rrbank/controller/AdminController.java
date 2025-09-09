@@ -1,7 +1,10 @@
 package com.azecoders.rrbank.controller;
 
+<<<<<<< HEAD
+=======
 import com.azecoders.rrbank.dao.entity.BankAccountEntity;
 import com.azecoders.rrbank.model.enums.OrderStatus;
+>>>>>>> b8be9f1a352aeed605db1b55bd4251358224649d
 import com.azecoders.rrbank.model.response.AccountResponse;
 import com.azecoders.rrbank.service.concrete.AdminServiceHandler;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -40,13 +42,19 @@ public class AdminController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("approve-account")
     public String acceptAccountOrder(@RequestParam Long id) {
-       return serviceHandler.acceptAccountOrder(id);
+       return serviceHandler.approveAccountOrder(id);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/reject-account")
     public String rejectAccountOrder(@RequestParam Long id) {
         return serviceHandler.rejectAccountOrder(id);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/approve-card")
+    public void approveCardOrder(Long id) {
+        serviceHandler.approveCardOrder(id);
     }
 
 }

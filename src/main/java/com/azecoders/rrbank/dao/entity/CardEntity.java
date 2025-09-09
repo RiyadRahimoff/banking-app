@@ -1,6 +1,10 @@
 package com.azecoders.rrbank.dao.entity;
 
 import com.azecoders.rrbank.model.enums.CardStatus;
+<<<<<<< HEAD
+import com.azecoders.rrbank.model.enums.CardType;
+=======
+>>>>>>> b8be9f1a352aeed605db1b55bd4251358224649d
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -49,6 +53,12 @@ public class CardEntity {
     @Enumerated(value = STRING)
     CardStatus cardStatus;
 
+<<<<<<< HEAD
+    @Enumerated(value = STRING)
+    CardType cardType;
+
+=======
+>>>>>>> b8be9f1a352aeed605db1b55bd4251358224649d
     @CreationTimestamp
     LocalDateTime createdAt;
 

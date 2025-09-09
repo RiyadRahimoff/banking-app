@@ -31,6 +31,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, ex.getStatus());
     }
 
+    @ExceptionHandler(CardFoundException.class)
+    public ResponseEntity<ErrorDetails> cardFoundException(CardFoundException ex) {
+        ErrorDetails error = new ErrorDetails(
+                ex.getMessage(),
+                LocalDateTime.now(),
+                ex.getStatus()
+        );
+        return new ResponseEntity<>(error, ex.getStatus());
+    }
+
     @ExceptionHandler(TransactionException.class)
     public ResponseEntity<ErrorDetails> transactionHandleError(TransactionException ex) {
         ErrorDetails error = new ErrorDetails(

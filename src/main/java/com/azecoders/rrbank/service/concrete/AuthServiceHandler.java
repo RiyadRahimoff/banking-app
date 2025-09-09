@@ -4,7 +4,6 @@ import com.azecoders.rrbank.dao.entity.UserEntity;
 import com.azecoders.rrbank.dao.repository.UserRepository;
 import com.azecoders.rrbank.exception.AccountFoundException;
 import com.azecoders.rrbank.exception.UserFoundException;
-import com.azecoders.rrbank.model.enums.UserRole;
 import com.azecoders.rrbank.model.enums.UserStatus;
 import com.azecoders.rrbank.model.requests.CreateLoginRequest;
 import com.azecoders.rrbank.model.requests.CreateRefreshTokenRequest;
@@ -47,6 +46,8 @@ public class AuthServiceHandler implements AuthService {
         }
 
         user.setUserStatus(UserStatus.ACTIVE);
+        user.setLoginAttempts(0);
+        userRepository.save(user);
         String accessToken = jwtService.generateAccessToken(user.getId(), user.getUserRole());
         String refreshToken = jwtService.generateRefreshToken(user.getId(), user.getUserRole());
         refreshTokenService.saveRefreshToken(user.getId(), refreshToken);

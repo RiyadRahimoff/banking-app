@@ -41,10 +41,17 @@ public class CardNumberGenerator {
         return (10 - (sum % 10)) % 10;
     }
 
+    public static String generateCVV() {
+        int cvv = 100 + RANDOM.nextInt(900); // 100-999 arası üç rəqəm
+        return String.valueOf(cvv);
+    }
+
     public static void main(String[] args) {
 
         for (int i = 0; i < 5; i++) {
             System.out.println(generateMasterCard());
         }
     }
+
+
 }
