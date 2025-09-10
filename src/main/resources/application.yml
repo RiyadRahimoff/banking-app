@@ -6,7 +6,7 @@ spring:
 
   liquibase:
     change-log: classpath:/liquibase/changelog-master.yml
-    drop-first: true
+    drop-first: false
 
   mail:
     host: smtp.gmail.com

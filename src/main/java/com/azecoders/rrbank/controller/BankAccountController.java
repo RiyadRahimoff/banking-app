@@ -42,4 +42,10 @@ public class BankAccountController {
     public String confirmWithdraw(Long id, String otpCode) {
         return serviceHandler.confirmWithdraw(id, otpCode);
     }
+
+    @PostMapping("/transfer-money")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void transfer(String fromCardNumber, String toCardNumber, BigDecimal amount) {
+         serviceHandler.transfer(fromCardNumber,toCardNumber,amount);
+    }
 }

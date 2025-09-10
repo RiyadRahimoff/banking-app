@@ -6,7 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface CardRepository extends JpaRepository<CardEntity,Long> {
+public interface CardRepository extends JpaRepository<CardEntity, Long> {
     boolean existsByAccount_User_IdAndCardType(Long userId, CardType cardType);
+
     Optional<CardEntity> findByCardNumber(String cardNumber);
 }
