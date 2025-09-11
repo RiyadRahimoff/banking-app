@@ -60,17 +60,17 @@ Banking-App currently implements the following functionalities:
 ### 7. OTP Security (Two-Factor Authentication)
 - Optional OTP verification for sensitive operations like large transfers.
 - OTP is time-limited and generated per request.
-- Future integration with Email service for sending OTPs.
+- Integration with Email service for sending OTPs.
 
 ### 8. Live Chat System (Future Feature)
 - Real-time chat system to communicate with bank support.
 - Frontend integration with React and backend using WebSocket/SignalR.
 - Aimed for customer support and quick query resolution.
 
-### 9. Admin Features (Planned)
+### 9. Admin Features 
 - Admin can approve or rejecet card or accounts.
 - Admin can view all user accounts, cards, and transactions.
-- Admin can block suspicious accounts or cards.
+- Admin can block suspicious accounts or cards.(PLANNED)
 - Admin dashboard to manage the platform efficiently.
 
 ### 10. Error Handling & Validation
