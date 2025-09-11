@@ -19,7 +19,7 @@ Banking-App currently implements the following functionalities:
 ### 1. User Registration & Login
 - Users can create an account with email, username, and password.
 - Passwords are securely hashed using Spring Security.
-- Login functionality validates credentials and provides authentication tokens (JWT planned for future).
+- Login functionality validates credentials and provides authentication tokens (JWT).
 - Input validation and error handling for secure and reliable login/register process.
 - Users have a complete profile containing:
   - Full name
